@@ -27,29 +27,6 @@ jobs:
         run: |
           python -m pytest
 
-      - name: Verify Secrets
-        shell: python
-        env:
-          SSH_HOST: ${{ secrets.SSH_SERVER_HOST }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        run: |
-          import os
-          import sys
-          
-          missing = []
-          if not os.environ.get("SSH_HOST"):
-              missing.append("SSH_SERVER_HOST")
-          if not os.environ.get("SSH_USER"):
-              missing.append("SSH_USER")
-          if not os.environ.get("SSH_KEY"):
-              missing.append("SSH_PRIVATE_KEY")
-          
-          if missing:
-              print(f"::error::The following secrets are missing or empty: {', '.join(missing)}")
-              print("Please verify that these secrets are set in the 'Labo0' environment in GitHub Settings.")
-              sys.exit(1)
-
       - name: Déploiement via SSH
         uses: appleboy/ssh-action@v1
         with:
